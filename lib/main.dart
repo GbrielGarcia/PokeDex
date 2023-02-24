@@ -5,7 +5,17 @@ import 'package:pokedex/src/home/home.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  ).then(
+    (_) {
+      runApp(const MyApp());
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,10 +23,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
 
     return MultiProvider(
       providers: [
