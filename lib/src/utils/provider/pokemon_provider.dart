@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../model/model.dart';
 
 class PokemonProvider with ChangeNotifier {
-  final String _baseURL = 'https://pokeapi.co/api/v2/pokemon?limit=20&offset=0';
+  final String _baseURL = 'https://pokeapi.co/api/v2/pokemon';
 
   PokemonsModel _pokemons = PokemonsModel();
   PokemonsModel get pokemons => _pokemons;

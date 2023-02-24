@@ -67,7 +67,7 @@ class PokemonWidget extends StatelessWidget {
                         ),
                       )
                       .toList(),
-                )
+                ),
               ],
             )
           ],

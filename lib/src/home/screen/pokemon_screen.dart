@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../../utils/constant/constant.dart';
 import '../../utils/model/model.dart';
@@ -14,19 +16,37 @@ class PokemonScreen extends StatefulWidget {
 class _PokemonScreenState extends State<PokemonScreen>
     with TickerProviderStateMixin {
   TabController? _tabController;
+  AnimationController? _controllerAnimated;
 
   void init(TickerProvider tickerProvider) {
-    _tabController = TabController(length: 2, vsync: tickerProvider);
+    _tabController = TabController(
+      length: 2,
+      vsync: tickerProvider,
+    );
+  }
+
+  void animatedController(TickerProvider tickerProvider) {
+    _controllerAnimated = AnimationController(
+        vsync: tickerProvider, duration: const Duration(seconds: 20));
   }
 
   @override
   void initState() {
     super.initState();
     init(this);
+    animatedController(this);
+    _controllerAnimated?.repeat();
+  }
+
+  @override
+  void dispose() {
+    _controllerAnimated?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -53,13 +73,25 @@ class _PokemonScreenState extends State<PokemonScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.pokemon.name!,
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.pokemon.name!,
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          '# ${widget.pokemon.id.toString()}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: Colors.white),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 10),
                     Row(
@@ -108,8 +140,8 @@ class _PokemonScreenState extends State<PokemonScreen>
                             unselectedLabelColor: Colors.grey,
                             controller: _tabController,
                             tabs: const [
-                              Text('Información'),
-                              Text('Estadísticas'),
+                              Text('Information'),
+                              Text('Statistics'),
                             ],
                           ),
                         ),
@@ -134,6 +166,27 @@ class _PokemonScreenState extends State<PokemonScreen>
             ],
           ),
           Positioned(
+            top: 60.0,
+            right: 40.0,
+            child: IgnorePointer(
+              ignoring: true,
+              child: AnimatedBuilder(
+                animation: _controllerAnimated!,
+                builder: (context, child) {
+                  return Transform.rotate(
+                    angle: _controllerAnimated!.value * 2 * pi,
+                    child: child,
+                  );
+                },
+                child: Image.asset(
+                  'assets/image/pokeball.png',
+                  width: size.width / 1.5,
+                  color: Colors.white30,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
             left: MediaQuery.of(context).size.width * 0.25,
             top: MediaQuery.of(context).size.width * 0.25,
             child: SizedBox(
@@ -142,7 +195,7 @@ class _PokemonScreenState extends State<PokemonScreen>
               child: Image.network(widget
                   .pokemon.sprites!.other!.officialArtwork!.frontDefault!),
             ),
-          )
+          ),
         ],
       ),
     );
